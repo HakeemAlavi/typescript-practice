@@ -1,17 +1,16 @@
-// src/App.tsx
+// App.tsx
 import React from 'react';
 import './App.css';
-import { MessageContextProvider } from './context/MessageContextProvider';
-import Parent from './components/Parent';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <MessageContextProvider>
-      <div className="App">
-        <Parent />
-      </div>
-    </MessageContextProvider>
+    <div className="App">
+      <Login />
+      <SignUp />
+    </div>
   );
-}
+};
 
 export default App;
