@@ -1,14 +1,17 @@
-// src/components/GrandChild.tsx
+// src/components/Grandchild.tsx
 import React from 'react';
-import { GrandChildProps } from '../types';
+import { useContext } from 'react';
+import MessageContext from '../context/MessageContext';
 
-const GrandChild: React.FC<GrandChildProps> = ({ message }) => {
+const Grandchild: React.FC = () => {
+  const { message } = useContext(MessageContext);
+  
   return (
     <div>
-      <h5>GrandChild Component</h5>
+      <h4>Grandchild Component</h4>
       <p>{message}</p>
     </div>
   );
 };
 
-export default GrandChild;
+export default Grandchild;

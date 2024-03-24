@@ -1,13 +1,12 @@
 // src/components/Child3.tsx
 import React from 'react';
-import GrandChild from './Grandchild';
-import { Child3Props } from '../types';
+import Grandchild from './Grandchild';
 
-const Child3: React.FC<Child3Props> = ({ message }) => {
+const Child3: React.FC = () => {
   return (
     <div>
-      <h4>Child3 Component</h4>
-      <GrandChild message={message} />
+      <h3>Child3 Component</h3>
+      <Grandchild />
     </div>
   );
 };
