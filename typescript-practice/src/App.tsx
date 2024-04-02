@@ -1,44 +1,50 @@
 // App.js
 import './App.css';
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 
-export default function Form() {
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [fullName, setFullName] = useState<string>('');
+interface PanelProps {
+  title: string;
+  children?: React.ReactNode; // Add children prop
+  isActive: boolean;
+  onShow: () => void;
+}
 
-  function handleFirstNameChange(e: ChangeEvent<HTMLInputElement>) {
-    const { value } = e.target;
-    setFirstName(value);
-    setFullName(value + ' ' + lastName);
-  }
+const Panel: React.FC<PanelProps> = ({ title, children, isActive, onShow }) => {
+  return (
+    <section className="panel">
+      <h3>{title}</h3>
+      {isActive ? (
+        <p>{children}</p>
+      ) : (
+        <button onClick={onShow}>
+          Show
+        </button>
+      )}
+    </section>
+  );
+};
 
-  function handleLastNameChange(e: ChangeEvent<HTMLInputElement>) {
-    const { value } = e.target;
-    setLastName(value);
-    setFullName(firstName + ' ' + value);
-  }
-
+const Accordion: React.FC = () => {
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   return (
     <>
-      <h2>Let’s check you in</h2>
-      <label>
-        First name:{' '}
-        <input
-          value={firstName}
-          onChange={handleFirstNameChange}
-        />
-      </label>
-      <label>
-        Last name:{' '}
-        <input
-          value={lastName}
-          onChange={handleLastNameChange}
-        />
-      </label>
-      <p>
-        Your ticket will be issued to: <b>{fullName}</b>
-      </p>
+      <h2>Almaty, Kazakhstan</h2>
+      <Panel
+        title="About"
+        isActive={activeIndex === 0}
+        onShow={() => setActiveIndex(0)}
+      >
+        With a population of about 2 million, Almaty is Kazakhstan's largest city. From 1929 to 1997, it was its capital city.
+      </Panel>
+      <Panel
+        title="Etymology"
+        isActive={activeIndex === 1}
+        onShow={() => setActiveIndex(1)}
+      >
+        The name comes from <span lang="kk-KZ">алма</span>, the Kazakh word for "apple" and is often translated as "full of apples". In fact, the region surrounding Almaty is thought to be the ancestral home of the apple, and the wild <i lang="la">Malus sieversii</i> is considered a likely candidate for the ancestor of the modern domestic apple.
+      </Panel>
     </>
   );
-}
+};
+
+export default Accordion;
