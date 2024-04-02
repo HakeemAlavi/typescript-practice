@@ -1,50 +1,37 @@
 // App.js
 import './App.css';
 import React, { useState } from 'react';
+import Chat from './components/Chat';
+import ContactList from './components/ContactList';
 
-interface PanelProps {
-  title: string;
-  children?: React.ReactNode; // Add children prop
-  isActive: boolean;
-  onShow: () => void;
+interface Contact {
+  name: string;
+  email: string;
 }
 
-const Panel: React.FC<PanelProps> = ({ title, children, isActive, onShow }) => {
+const Messenger: React.FC = () => {
+  const [contacts, setContacts] = useState<Contact[]>([
+    { name: 'Taylor', email: 'taylor@mail.com' },
+    { name: 'Alice', email: 'alice@mail.com' },
+    { name: 'Bob', email: 'bob@mail.com' }
+  ]);
+
+  const [to, setTo] = useState<Contact>(contacts[0]);
+
+  const handleContactSelect = (contact: Contact) => {
+    setTo(contact);
+  };
+
   return (
-    <section className="panel">
-      <h3>{title}</h3>
-      {isActive ? (
-        <p>{children}</p>
-      ) : (
-        <button onClick={onShow}>
-          Show
-        </button>
-      )}
-    </section>
+    <div>
+      <ContactList
+        contacts={contacts}
+        selectedContact={to}
+        onSelect={handleContactSelect}
+      />
+      <Chat contact={to} />
+    </div>
   );
 };
 
-const Accordion: React.FC = () => {
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  return (
-    <>
-      <h2>Almaty, Kazakhstan</h2>
-      <Panel
-        title="About"
-        isActive={activeIndex === 0}
-        onShow={() => setActiveIndex(0)}
-      >
-        With a population of about 2 million, Almaty is Kazakhstan's largest city. From 1929 to 1997, it was its capital city.
-      </Panel>
-      <Panel
-        title="Etymology"
-        isActive={activeIndex === 1}
-        onShow={() => setActiveIndex(1)}
-      >
-        The name comes from <span lang="kk-KZ">алма</span>, the Kazakh word for "apple" and is often translated as "full of apples". In fact, the region surrounding Almaty is thought to be the ancestral home of the apple, and the wild <i lang="la">Malus sieversii</i> is considered a likely candidate for the ancestor of the modern domestic apple.
-      </Panel>
-    </>
-  );
-};
-
-export default Accordion;
+export default Messenger;
