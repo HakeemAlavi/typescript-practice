@@ -1,19 +1,8 @@
 // App.js
-import React from 'react';
 import './App.css';
-import { useState } from 'react';
+import React, { useState, ButtonHTMLAttributes } from 'react';
 
 export default function MyApp() {
-  return (
-    <div>
-      <h1>Counters that update separately</h1>
-      <MyButton />
-      <MyButton />
-    </div>
-  );
-}
-
-function MyButton() {
   const [count, setCount] = useState(0);
 
   function handleClick() {
@@ -21,7 +10,17 @@ function MyButton() {
   }
 
   return (
-    <button onClick={handleClick}>
+    <div>
+      <h1>Counters that update together</h1>
+      <MyButton count={count} onClick={handleClick} />
+      <MyButton count={count} onClick={handleClick} />
+    </div>
+  );
+}
+
+function MyButton({ count, onClick }: { count: number; onClick: ButtonHTMLAttributes<HTMLButtonElement>['onClick'] }) {
+  return (
+    <button onClick={onClick}>
       Clicked {count} times
     </button>
   );
