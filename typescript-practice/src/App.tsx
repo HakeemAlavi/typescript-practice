@@ -1,37 +1,93 @@
-// App.js
+// App.tsx
 import './App.css';
-import React, { useState } from 'react';
-import Chat from './components/Chat';
-import ContactList from './components/ContactList';
+import React, { useReducer } from 'react';
+import TaskApp from './components/TaskApp';
+import TaskList from './components/TaskList';
 
-interface Contact {
-  name: string;
-  email: string;
+interface Task {
+  id: number;
+  text: string;
+  done: boolean;
 }
 
-const Messenger: React.FC = () => {
-  const [contacts, setContacts] = useState<Contact[]>([
-    { name: 'Taylor', email: 'taylor@mail.com' },
-    { name: 'Alice', email: 'alice@mail.com' },
-    { name: 'Bob', email: 'bob@mail.com' }
-  ]);
+interface Action {
+  type: string;
+  id?: number;
+  text?: string;
+  task?: Task;
+}
 
-  const [to, setTo] = useState<Contact>(contacts[0]);
+function tasksReducer(tasks: Task[], action: Action): Task[] {
+  switch (action.type) {
+    case 'added': {
+      return [...tasks, {
+        id: action.id!,
+        text: action.text!,
+        done: false
+      }];
+    }
+    case 'changed': {
+      return tasks.map(t => {
+        if (t.id === action.task!.id) {
+          return action.task!;
+        } else {
+          return t;
+        }
+      });
+    }
+    case 'deleted': {
+      return tasks.filter(t => t.id !== action.id);
+    }
+    default: {
+      throw new Error('Unknown action: ' + action.type);
+    }
+  }
+}
 
-  const handleContactSelect = (contact: Contact) => {
-    setTo(contact);
-  };
+const initialTasks: Task[] = [
+  { id: 0, text: 'Visit Kafka Museum', done: true },
+  { id: 1, text: 'Watch a puppet show', done: false },
+  { id: 2, text: 'Lennon Wall pic', done: false }
+];
+
+let nextId = 3;
+
+export default function App() {
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+
+  function handleAddTask(text: string) {
+    dispatch({
+      type: 'added',
+      id: nextId++,
+      text: text,
+    });
+  }
+
+  function handleChangeTask(task: Task) {
+    dispatch({
+      type: 'changed',
+      task: task
+    });
+  }
+
+  function handleDeleteTask(taskId: number) {
+    dispatch({
+      type: 'deleted',
+      id: taskId
+    });
+  }
 
   return (
-    <div>
-      <ContactList
-        contacts={contacts}
-        selectedContact={to}
-        onSelect={handleContactSelect}
+    <>
+      <h1>Prague itinerary</h1>
+      <TaskApp
+        onAddTask={handleAddTask}
       />
-      <Chat contact={to} />
-    </div>
+      <TaskList
+        tasks={tasks}
+        onChangeTask={handleChangeTask}
+        onDeleteTask={handleDeleteTask}
+      />
+    </>
   );
-};
-
-export default Messenger;
+}
